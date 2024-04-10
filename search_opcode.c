@@ -60,6 +60,7 @@ char ** hashTable(char ** all_str, int record_len) {
     for (int i = 0;i < record_len;i++) {
         int val = getCodeOpcode(all_str[i]);
         int index = val % record_len;
+        //printf("%s, %d\n", all_str[i], index);
         if (hash_table[index] == NULL) { // the bucket not have value
             hash_table[index] = all_str[i];
         }
@@ -75,7 +76,7 @@ char ** hashTable(char ** all_str, int record_len) {
 
             // check whether have empty bucket
             if (empty_bucket == -1) {
-                printf("no more empty bucket\n");
+                printf("no more empty bucket %s\n", all_str[i]);
             }
             else {
                 hash_table[empty_bucket] = all_str[i];
@@ -104,6 +105,7 @@ int cmpMnemonic(char * str, char * c, int record_len) {
 
 char * getOpcode(char * c) { // get opcode part of each line
     char * opcode = malloc(strlen(c) * sizeof(char));
+    int index = 0;
     int start_opcode = 0;
     char * temp = malloc(sizeof(char));
     for (int i = 0;i < strlen(c);i++) {
@@ -113,8 +115,11 @@ char * getOpcode(char * c) { // get opcode part of each line
         }
         if (start_opcode) {
             temp[0] = c[i]; // temp is a char pointer to temp store the char
-            strcat(opcode, temp); // concat two string
+            opcode[index++] = c[i];
         }
+    }
+    for (int i = index;i < strlen(opcode);i++) {
+        opcode[i] = 0;
     }
     return opcode;
 }
@@ -151,7 +156,7 @@ void find(char * mnemonic, char ** all_str, int record_len) {
 
     // output
     //printf("the relative opcode of %s = %s", mnemonic, getOpcode(hash_table[mnemonic_index]));     
-    printf("opCode : %s\n", getOpcode(hash_table[mnemonic_index]));   
+    printf("opCode : %s\n", getOpcode(hash_table[mnemonic_index]));
 }
 
 int main() {
